@@ -26,11 +26,22 @@ async function sendTelegramMessage(text) {
 (async () => {
   console.log('--- Iniciando Radar PropTech (Modo Todo Incluido) ---');
   
-  // 1. Obtener HTML mediante ZenRows
-  // Cambia tu variable zenrowsUrl por esta:
-  const zenrowsUrl = `https://api.zenrows.com/v1/?apikey=${ZENROWS_KEY}&url=${encodeURIComponent(TARGET_URL)}&js_render=true&antibot=true&proxy_country=es`;
+  // URL construida de forma segura
+  const params = new URLSearchParams({
+    apikey: ZENROWS_KEY,
+    url: TARGET_URL,
+    js_render: 'true',
+    antibot: 'true',
+    proxy_country: 'es'
+  });
+  const zenrowsUrl = `https://api.zenrows.com/v1/?${params.toString()}`;
   const response = await fetch(zenrowsUrl);
   const html = await response.text();
+  if (!response.ok) {
+    console.error('Error al obtener HTML con ZenRows:', response.status);
+    console.error('Respuesta detallada:', html); // <-- ESTO NOS DIRÁ EL MENSAJE DE ZENROWS
+    return;
+  }
   
   if (!response.ok) {
     console.error('Error al obtener HTML con ZenRows:', response.status);
