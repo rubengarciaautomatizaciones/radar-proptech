@@ -1,0 +1,38 @@
+name: Motor Delta PropTech
+
+on:
+  schedule:
+    # 07:30 a 07:50 UTC (09:30 a 09:50 Hora España CEST)
+    - cron: '30,40,50 7 * * *'
+    # 08:00 a 17:50 UTC (10:00 a 19:50 Hora España CEST)
+    - cron: '*/10 8-17 * * *'
+    # 18:00 UTC (20:00 Hora España CEST)
+    - cron: '0 18 * * *'
+  workflow_dispatch: # El botón manual para la demo
+
+jobs:
+  rastrear:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar el motor de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar librerías
+        run: npm install
+
+      - name: Instalar navegador oculto
+        run: npx playwright install chromium --with-deps
+
+      - name: Ejecutar Radar PropTech
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
+        run: npm start
