@@ -30,7 +30,7 @@ async function sendTelegramMessage(text) {
   
   // 4. Arrancar el navegador camuflado con ScraperAPI
   const browser = await chromium.launch({
-    proxy: { server: `http://scraperapi:${SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001` }
+    proxy: { server: `http://scraperapi.premium=true.country_code=es:${SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001` }
   });
   
   const page = await browser.newPage();
