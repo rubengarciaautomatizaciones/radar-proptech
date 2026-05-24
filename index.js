@@ -27,7 +27,8 @@ async function sendTelegramMessage(text) {
   console.log('--- Iniciando Radar PropTech (Modo Todo Incluido) ---');
   
   // 1. Obtener HTML mediante ZenRows
-  const zenrowsUrl = `https://api.zenrows.com/v1/?apikey=${ZENROWS_KEY}&url=${encodeURIComponent(TARGET_URL)}&antibot=true&premium_proxy=true&proxy_country=es`;
+  // Cambia tu variable zenrowsUrl por esta:
+  const zenrowsUrl = `https://api.zenrows.com/v1/?apikey=${ZENROWS_KEY}&url=${encodeURIComponent(TARGET_URL)}&js_render=true&antibot=true&proxy_country=es`;
   const response = await fetch(zenrowsUrl);
   const html = await response.text();
   
