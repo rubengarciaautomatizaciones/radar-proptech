@@ -7,7 +7,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-const SCRAPERAPI_KEY = process.env.SCRAPERAPI_KEY;
+const ZENROWS_KEY = process.env.ZENROWS_KEY;
 
 // 2. Base de Datos y Territorio
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -23,25 +23,25 @@ async function sendTelegramMessage(text) {
 }
 
 (async () => {
-  console.log('Iniciando Radar PropTech (Modo Infiltración REST API)...');
+  console.log('Iniciando Radar PropTech (Modo Blindado ZenRows)...');
   
   try {
-    // 3. El Golpe Maestro: ScraperAPI extrae el HTML desde conexiones residenciales españolas
-    const scraperUrl = `http://api.scraperapi.com/?api_key=${SCRAPERAPI_KEY}&url=${encodeURIComponent(TARGET_URL)}&premium=true&country_code=es`;
+    // 3. El Ariete: ZenRows con Anti-Bot y Proxy Premium de España
+    const zenrowsUrl = `https://api.zenrows.com/v1/?apikey=${ZENROWS_KEY}&url=${encodeURIComponent(TARGET_URL)}&antibot=true&premium_proxy=true&proxy_country=es`;
     
-    console.log('Enviando petición a los servidores de ScraperAPI...');
-    const response = await fetch(scraperUrl);
+    console.log('Enviando petición a ZenRows para reventar Datadome...');
+    const response = await fetch(zenrowsUrl);
     const html = await response.text();
     
-    // Si Datadome intercepta excepcionalmente a ScraperAPI, abortamos la misión en silencio para no saturar errores
+    // Si Idealista bloquea excepcionalmente el intento, abortamos en silencio para no generar falsos errores
     if (!response.ok || html.includes('captcha') || html.toLowerCase().includes('datadome')) {
-      console.log('El escudo bloqueó este intento. Nos retiramos para reintentar en el próximo ciclo (10 min).');
+      console.log('ZenRows fue bloqueado en este intento. Nos retiramos para reintentar en el próximo ciclo.');
       return;
     }
 
-    console.log('¡Muro atravesado! HTML capturado. Parseando datos en entorno cerrado...');
+    console.log('¡Datadome superado! HTML capturado. Parseando datos en entorno cerrado...');
 
-    // 4. Arrancar nuestro navegador fantasma SIN conexión a internet, solo para leer el código robado
+    // 4. Leer el código en local con Playwright (Sin navegar a internet)
     const browser = await chromium.launch();
     const page = await browser.newPage();
     await page.setContent(html); 
@@ -66,7 +66,7 @@ async function sendTelegramMessage(text) {
 
     console.log(`Particulares reales detectados en Página 1: ${anuncios.length}`);
 
-    // 6. El Motor Delta (Guardado silencioso en CRM y Alerta)
+    // 6. El Motor Delta (Cruce con el CRM)
     for (const piso of anuncios) {
       const { data } = await supabase
         .from('propiedades_rastreadas')
@@ -79,6 +79,7 @@ async function sendTelegramMessage(text) {
         const mensaje = `🚨 <b>¡NUEVO PISO DE PARTICULAR!</b> 🚨\n\n📍 <b>Zona:</b> Águilas, Murcia\n💶 <b>Precio:</b> ${piso.price}\n\n🔗 <a href="${piso.url}">Ver Anuncio</a>`;
         await sendTelegramMessage(mensaje);
 
+        // Guardarlo en Supabase
         await supabase.from('propiedades_rastreadas').insert([
           { id_anuncio: piso.id, estado: 'Enviado_Agente' }
         ]);
@@ -90,6 +91,6 @@ async function sendTelegramMessage(text) {
     console.log('Misión completada. Desconectando.');
     
   } catch (error) {
-    console.error('Error de ejecución en el motor REST:', error);
+    console.error('Error de ejecución en el motor ZenRows:', error);
   }
 })();
