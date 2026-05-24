@@ -37,7 +37,7 @@ async function sendTelegramMessage(text) {
   
   try {
     console.log('Accediendo al portal...');
-    await page.goto(TARGET_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.goto(TARGET_URL, { waitUntil: 'domcontentloaded', timeout: 150000 });
     
     // 5. Extraer anuncios y aplicar el Filtro "Particular"
     const anuncios = await page.$$eval('article.item', nodes => {
