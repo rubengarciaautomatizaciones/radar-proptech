@@ -34,5 +34,5 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          SCRAPERAPI_KEY: ${{ secrets.SCRAPERAPI_KEY }}
+          ZENROWS_KEY: ${{ secrets.ZENROWS_KEY }}
         run: npm start
